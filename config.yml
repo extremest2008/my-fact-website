@@ -1,13 +1,14 @@
 backend:
-  name: github
-  repo: extremest2008/my-fact-website
+  name: git-gateway
   branch: main
-media_folder: "images"
+
+media_folder: "static/images"
 public_folder: "/images"
+
 collections:
   - name: "facts"
     label: "Daily Facts"
-    folder: "content"
+    folder: "content/facts"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
