@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mangal Murti Bhawan (Media)</title>
+    <style>
+        /* Dark Classic Theme */
+        body {
+            background-color: #121212; /* Dark background */
+            color: #e0e0e0; /* Soft white text */
+            font-family: "Georgia", serif; /* Classic serif font */
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ffcc00; /* Classic gold tone */
+        }
+
+        #media-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        img, video {
+            width: 70%;
+            max-width: 800px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(255, 204, 0, 0.5); /* Subtle glow */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+
+        img:hover, video:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 6px 20px rgba(255, 204, 0, 0.8); /* Stronger glow on hover */
+        }
+
+        video {
+            max-height: 450px;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Mangal Murti Bhawan (Media)</h1>
+    <div id="media-container"></div>
+
+    <script>
+        fetch('media/')  // Fetch list of images/videos
+        .then(response => response.text())
+        .then(text => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(text, 'text/html');
+            const mediaContainer = document.getElementById('media-container');
+
+            const files = [...doc.querySelectorAll('a')]
+                .map(link => link.getAttribute('href'))
+                .filter(name => /\.(jpg|jpeg|png|gif|mp4|webm|ogg)$/i.test(name)) 
+                .sort((a, b) => b.localeCompare(a)); // Newest first
+
+            files.forEach(file => {
+                let mediaElement;
+                if (/\.(mp4|webm|ogg)$/i.test(file)) {
+                    mediaElement = document.createElement('video');
+                    mediaElement.controls = true;
+                    const source = document.createElement('source');
+                    source.src = `media/${file}`;
+                    source.type = `video/${file.split('.').pop()}`;
+                    mediaElement.appendChild(source);
+                } else {
+                    mediaElement = document.createElement('img');
+                    mediaElement.src = `media/${file}`;
+                    mediaElement.alt = "Daily Fact";
+                }
+                mediaContainer.appendChild(mediaElement);
+            });
+        })
+        .catch(error => console.error('Error loading media:', error));
+    </script>
+
+    <footer>© 2025 | Made with ❤️</footer>
+
+</body>
+</html>
